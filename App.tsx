@@ -10,7 +10,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Splash Screen" component={SplashScreen}></Stack.Screen>
+        <Stack.Screen name="Splash" component={SplashScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
