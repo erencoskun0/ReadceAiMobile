@@ -5,6 +5,8 @@ import ExploreScreen from '../screens/ExploreScreen';
 import CreateScreen from '../screens/CreateScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
+import SearchScreen from '../screens/SearchScreen';
+import DictionaryScreen from '../screens/DictionaryScreen';
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -16,12 +18,16 @@ const TabNavigator = () => {
           let IconComponent;
 
           // Örneğin route.name'e göre ikon belirleme:
-          if (route.name === 'Explore') {
+          if (route.name === 'Keşfet') {
             IconComponent = <Ionicons name="compass-outline" size={size} color={color} />;
-          } else if (route.name == 'Create') {
+          } else if (route.name == 'Oluştur') {
             IconComponent = <Ionicons name="add-circle-outline" size={size} color={color} />;
-          } else if (route.name == 'Profile') {
+          } else if (route.name == 'Profilim') {
             IconComponent = <Ionicons name="person-outline" size={size} color={color} />;
+          } else if (route.name == 'Ara') {
+            IconComponent = <Ionicons name="search" size={size} color={color} />;
+          } else if (route.name == 'Sözlüğüm') {
+            IconComponent = <Ionicons name="language-outline" size={size} color={color} />;
           }
           return IconComponent;
         },
@@ -29,7 +35,8 @@ const TabNavigator = () => {
         tabBarActiveTintColor: '#000957',
         tabBarInactiveTintColor: '#a1a1a1',
         tabBarStyle: {
-          height: 55,
+          height: 70,
+
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
         },
@@ -40,9 +47,11 @@ const TabNavigator = () => {
           paddingVertical: 0,
         },
       })}>
-      <Tab.Screen name="Explore" component={ExploreScreen} />
-      <Tab.Screen name="Create" component={CreateScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Keşfet" component={ExploreScreen} />
+      <Tab.Screen name="Ara" component={SearchScreen} />
+      <Tab.Screen name="Oluştur" component={CreateScreen} />
+      <Tab.Screen name="Sözlüğüm" component={DictionaryScreen} />
+      <Tab.Screen name="Profilim" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };

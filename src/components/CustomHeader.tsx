@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 interface CustomHeaderProp {
   title: string;
@@ -8,40 +9,39 @@ interface CustomHeaderProp {
   logo?: boolean;
   rightButtonText?: string;
   onRightPress?: () => void;
+  pt?: string;
+  titleSize?: string;
 }
 
 const CustomHeader = ({
   title,
   onBackPress,
   onRightPress,
-  logo,
   rightButtonText,
+  pt,
+  titleSize,
 }: CustomHeaderProp) => {
   return (
-    <SafeAreaView className="bg-secondary " edges={['top']}>
-      <View className="relative flex flex-row items-center justify-between px-4 py-2">
-        {/* Sol tarafta geri butonu varsa */}
-        {onBackPress ? (
-          <TouchableOpacity onPress={onBackPress}>
-            <Text className="text-white">{'< Back'}</Text>
-          </TouchableOpacity>
-        ) : (
-          logo && (
-            <TouchableOpacity className="flex h-12 w-12  items-center justify-center   rounded-full bg-blue-400">
-              <Image source={require('../../assets/logo.png')} className=" h-8 w-10" />{' '}
+    <SafeAreaView className={`  ${pt}  `} edges={['top']}>
+      <View
+        className={`relative flex flex-row items-center justify-between ${onBackPress ? 'px-2' : 'px-4'}  py-2`}>
+        <View className="flex flex-row  items-center gap-3">
+          {onBackPress && (
+            <TouchableOpacity onPress={onBackPress}>
+              <AntDesign name="arrowleft" size={26} color="black" />
             </TouchableOpacity>
-          )
-        )}
+          )}
+          <Text style={{ fontFamily: 'Poppins-Medium' }} className={`${titleSize}`}>
+            {title}
+          </Text>
+        </View>
 
-        <View className="flex-row items-center"></View>
-
-        {/* Sağ tarafta buton varsa */}
-        {onRightPress && rightButtonText ? (
+        {onRightPress && rightButtonText && (
           <TouchableOpacity onPress={onRightPress}>
-            <Text className="text-white">{rightButtonText}</Text>
+            <Text className="text-xl" style={{ fontFamily: 'Poppins-Regular' }}>
+              {rightButtonText}
+            </Text>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity></TouchableOpacity>
         )}
       </View>
     </SafeAreaView>

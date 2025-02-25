@@ -2,13 +2,13 @@ import { View, Text } from 'react-native';
 import React from 'react';
 import CustomHeader from '../components/CustomHeader';
 
-const CreateScreen = () => {
+const SearchScreen = () => {
   return (
     <View>
-      <CustomHeader title="Oluştur" pt={'pt-[0]'} titleSize={'text-2xl'} />
-      <Text>CreateScreen</Text>
+      <CustomHeader title="Ara" pt={'pt-[0]'} titleSize={'text-2xl'} />
+      <Text>SearchScreen</Text>
     </View>
   );
 };
 
-export default CreateScreen;
+export default SearchScreen;
