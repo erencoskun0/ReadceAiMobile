@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import ExploreScreen from './src/screens/ExploreScreen';
 import TabNavigator from './src/navigation/TabNavigator';
 import { useFonts } from 'expo-font';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -17,13 +18,21 @@ export default function App() {
     'Poppins-Medium': require('./assets/fonts/Poppins-Medium.ttf'),
     'Poppins-SemiBold': require('./assets/fonts/Poppins-SemiBold.ttf'),
   });
-
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 5,
+      },
+    },
+  });
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Home" component={TabNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={client}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="Home" component={TabNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
