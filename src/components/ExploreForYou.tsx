@@ -1,12 +1,20 @@
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import React from 'react';
-const data = [
-  { id: '1', title: 'Item 1' },
-  { id: '2', title: 'Item 2' },
-  { id: '3', title: 'Item 3' },
-  { id: '4', title: 'Item 4' },
-];
+import React, { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { GetAllArticlesIsPublic } from '../services/apiExplore';
+import { GetAllArticlesIsPublicType } from '../types/apiExploreType';
+import axios from 'axios';
+
 const ExploreForYou = () => {
+  const {
+    data: AllArticlesIsPublicData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['AllArticlesIsPublic'],
+    queryFn: () => GetAllArticlesIsPublic(),
+  });
+
   return (
     <View>
       <View className="mb-1 mt-5 flex flex-row items-center justify-between px-3">
@@ -17,11 +25,11 @@ const ExploreForYou = () => {
       </View>
       <View className="flex flex-row items-center">
         <FlatList
-          data={data}
+          data={AllArticlesIsPublicData} // `data` olarak doğrudan diziyi kullan
           horizontal
-          renderItem={({ item }) => (
-            <View className="mx-2 w-96 rounded-lg bg-secondary p-4">
-              <Text className="text-white">{item.title}</Text>
+          renderItem={({ item }: { item: GetAllArticlesIsPublicType }) => (
+            <View key={item.id} className="mx-2 w-96 rounded-lg bg-secondary p-4">
+              <Text className="text-white">{item.articleTitle}</Text>
             </View>
           )}
           keyExtractor={(item) => item.id}
