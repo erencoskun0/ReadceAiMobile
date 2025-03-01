@@ -19,5 +19,5 @@ export type GetAllArticlesIsPublicType = {
     id: string;
     name: string;
     image: string;
-  }[];
+  };
 };

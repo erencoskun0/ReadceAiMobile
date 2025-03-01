@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 interface CustomHeaderProp {
-  title: string;
+  title?: string;
   onBackPress?: () => void;
   logo?: boolean;
   rightButtonText?: string;
