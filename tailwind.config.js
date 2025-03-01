@@ -9,6 +9,12 @@ module.exports = {
         primary: '#000957',
         secondary: '#98D8EF',
       },
+      fontFamily: {
+        sans: ['Poppins-Regular'],
+        medium: ['Poppins-Medium'],
+        semibold: ['Poppins-SemiBold'],
+        bold: ['Poppins-Bold'],
+      },
     },
   },
   plugins: [],

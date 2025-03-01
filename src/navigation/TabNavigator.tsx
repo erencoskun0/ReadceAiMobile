@@ -7,8 +7,19 @@ import ProfileScreen from '../screens/ProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
 import SearchScreen from '../screens/SearchScreen';
 import DictionaryScreen from '../screens/DictionaryScreen';
+import ArticleDetailScreen from '../screens/ArticleDetailScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
+const ExploreStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="KeşfetMain" component={ExploreScreen} />
+      <Stack.Screen name="ArticleDetailScreen" component={ArticleDetailScreen} />
+    </Stack.Navigator>
+  );
+};
 const TabNavigator = () => {
   return (
     <Tab.Navigator
@@ -47,7 +58,7 @@ const TabNavigator = () => {
           paddingVertical: 0,
         },
       })}>
-      <Tab.Screen name="Keşfet" component={ExploreScreen} />
+      <Tab.Screen name="Keşfet" component={ExploreStack} />
       <Tab.Screen name="Ara" component={SearchScreen} />
       <Tab.Screen name="Oluştur" component={CreateScreen} />
       <Tab.Screen name="Sözlüğüm" component={DictionaryScreen} />
