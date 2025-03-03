@@ -26,7 +26,12 @@ const ArticleDetailScreen = () => {
   const route = useRoute<any>();
   const { item }: { item: GetAllArticlesIsPublicType } = route.params;
   const [isSummaryVisible, setIsSummaryVisible] = useState(false);
-
+  console.log(item);
+  function processText(text: any) {
+    const punctuationRegex = /([.,;:!?()"])/g;
+    const spacedText = text.replace(punctuationRegex, '$1');
+    return spacedText.split(/\s+/).filter((token) => token.length > 0);
+  }
   return (
     <View>
       <CustomHeader
@@ -43,7 +48,7 @@ const ArticleDetailScreen = () => {
         <View className="px-4">
           {' '}
           <Image
-            source={{ uri: 'https://i.ibb.co/tw7QGMhF/Untitled-design.png' }}
+            source={{ uri: item?.articleImage }}
             className="h-64 w-full rounded-3xl   "
             resizeMode="cover"
           />
@@ -111,7 +116,7 @@ const ArticleDetailScreen = () => {
             )}
           </View>
 
-          <Text className="Bold text-3xl font-medium   text-primary">{item.articleTitle}</Text>
+          <Text className="Bold font-medium text-3xl   text-primary">{item.articleTitle}</Text>
         </View>
         <View className=" mt-1 flex-row items-center gap-2 px-4">
           <Ionicons name="reader-outline" size={20} color="#000957" />
@@ -121,16 +126,26 @@ const ArticleDetailScreen = () => {
         </View>
         <View className="mt-4 px-4">
           <View className="h-full flex-row flex-wrap leading-8">
-            {item.articleContent.split(' ').map((word, index) => (
-              <PopoverView key={index} word={word} />
-            ))}
+            {processText(item.articleContent).map((word, index) => {
+              // Tek tırnak hariç diğer noktalama işaretleri
+              const punctuationMarks = '.,;:!?()"';
+              return punctuationMarks.includes(word) ? (
+                <Text
+                  key={index}
+                  className="flex flex-row items-center font-medium text-lg text-primary">
+                  {word}{' '}
+                </Text>
+              ) : (
+                <PopoverView key={index} word={word} />
+              );
+            })}
           </View>
         </View>
       </ScrollView>
       <CustomToUpModal isVisible={isSummaryVisible} setIsVisible={setIsSummaryVisible}>
         <ScrollView className="px-6 pb-8" showsVerticalScrollIndicator={false}>
-          <Text className="mb-3 text-center text-xl font-semibold text-primary">Özet</Text>
-          <Text className="mb-1 text-2xl font-medium text-primary">{item.articleTitle}</Text>
+          <Text className="mb-3 text-center font-semibold text-xl text-primary">Özet</Text>
+          <Text className="mb-1 font-medium text-2xl text-primary">{item.articleTitle}</Text>
           <Text className="font-sans text-lg leading-6 text-gray-800">{item.articleSummary}</Text>
         </ScrollView>
       </CustomToUpModal>
