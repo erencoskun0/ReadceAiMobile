@@ -13,11 +13,17 @@ const PopoverView = ({ word }: any) => {
   const [isVisible, setIsVisible] = useState(false);
   const touchableRef = useRef<any>(null);
   const noTouchableRef = useRef<any>(null);
-
+  console.log(word);
+  const cleanWord = (word: string) => {
+    return word.replace(/^[\s\p{P}]+|[\s\p{P}]+$/gu, '');
+  };
   return (
     <>
-      <TouchableOpacity ref={touchableRef} onPress={() => setIsVisible(true)} className="relative">
-        <Text className="text-lg font-medium text-primary">{word} </Text>
+      <TouchableOpacity
+        ref={touchableRef}
+        onPress={() => setIsVisible(true)}
+        className="flex flex-row items-center ">
+        <Text className="flex flex-row items-center font-medium text-lg text-primary">{word} </Text>
       </TouchableOpacity>
 
       <Popover
@@ -43,7 +49,9 @@ const PopoverView = ({ word }: any) => {
             <TouchableOpacity>
               <MaterialCommunityIcons name="bullhorn-outline" size={24} color="black" />
             </TouchableOpacity>
-            <Text className="mb-2 text-center   text-xl font-semibold text-primary">{word}</Text>
+            <Text className="mb-2 text-center   font-semibold text-xl text-primary">
+              {cleanWord(word)}
+            </Text>
           </View>
 
           <Text className="mb-3 text-sm text-primary">Eş anlamlıları:</Text>

@@ -51,7 +51,7 @@ const ExploreForYou = () => {
               <View className="mb-3">
                 <Image
                   className="  h-44 w-auto  rounded-2xl"
-                  source={{ uri: 'https://i.ibb.co/tw7QGMhF/Untitled-design.png' }}
+                  source={{ uri: item?.articleImage }}
                 />
               </View>
               <View className="mb-3 flex flex-row items-center overflow-hidden">
@@ -131,7 +131,7 @@ const ExploreForYou = () => {
                     {item?.articleType?.articleTypeName}
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity className='flex-row items-center'>
+                <TouchableOpacity className="flex-row items-center">
                   <Ionicons name="language" size={16} color="#000957" />
                   <Text className="text-sm   text-primary" style={{ fontFamily: 'Poppins-Medium' }}>
                     {item?.language?.langName}
