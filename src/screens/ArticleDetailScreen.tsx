@@ -20,18 +20,15 @@ import { AntDesign } from '@expo/vector-icons';
 import WordCard from '../components/WordCard';
 import WordCardContainer from '../components/WordCardContainer';
 import PopoverView from '../components/PopoverView';
+import PopoverContainer from '../components/PopoverContainer';
 const { height: DEVICE_HEIGHT } = Dimensions.get('window');
 const ArticleDetailScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { item }: { item: GetAllArticlesIsPublicType } = route.params;
   const [isSummaryVisible, setIsSummaryVisible] = useState(false);
-  console.log(item);
-  function processText(text: any) {
-    const punctuationRegex = /([.,;:!?()"])/g;
-    const spacedText = text.replace(punctuationRegex, '$1');
-    return spacedText.split(/\s+/).filter((token) => token.length > 0);
-  }
+  const [isRead, setIsRead] = useState(false);
+
   return (
     <View>
       <CustomHeader
@@ -116,7 +113,15 @@ const ArticleDetailScreen = () => {
             )}
           </View>
 
-          <Text className="Bold font-medium text-3xl   text-primary">{item.articleTitle}</Text>
+          <View className="  flex-row flex-wrap leading-8">
+            {item.articleTitle.split(' ').map((word, index) => (
+              <PopoverView
+                word={word}
+                key={index}
+                textStyle={'font-medium text-3xl text-primary'}
+              />
+            ))}
+          </View>
         </View>
         <View className=" mt-1 flex-row items-center gap-2 px-4">
           <Ionicons name="reader-outline" size={20} color="#000957" />
@@ -124,29 +129,42 @@ const ArticleDetailScreen = () => {
             Okuma Süresi: {Math.ceil(item.articleContent.length / 400)} dakika
           </Text>
         </View>
-        <View className="mt-4 px-4">
-          <View className="h-full flex-row flex-wrap leading-8">
-            {processText(item.articleContent).map((word, index) => {
-              // Tek tırnak hariç diğer noktalama işaretleri
-              const punctuationMarks = '.,;:!?()"';
-              return punctuationMarks.includes(word) ? (
-                <Text
-                  key={index}
-                  className="flex flex-row items-center font-medium text-lg text-primary">
-                  {word}{' '}
-                </Text>
-              ) : (
-                <PopoverView key={index} word={word} />
-              );
-            })}
-          </View>
-        </View>
+        {isRead ? (
+          <PopoverContainer content={item?.articleContent} />
+        ) : (
+          <TouchableOpacity
+            onPress={() => setIsRead(true)}
+            className="mx-auto mt-10 w-[80%] rounded-full bg-red-500 py-2">
+            <Text className="text-center font-semibold text-lg text-white ">
+              {' '}
+              Şimdi Okumaya Başla
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
       <CustomToUpModal isVisible={isSummaryVisible} setIsVisible={setIsSummaryVisible}>
         <ScrollView className="px-6 pb-8" showsVerticalScrollIndicator={false}>
           <Text className="mb-3 text-center font-semibold text-xl text-primary">Özet</Text>
-          <Text className="mb-1 font-medium text-2xl text-primary">{item.articleTitle}</Text>
-          <Text className="font-sans text-lg leading-6 text-gray-800">{item.articleSummary}</Text>
+          <View className="  flex-row flex-wrap leading-8" >
+            {item.articleTitle.split(' ').map((word, index) => (
+              <PopoverView
+                word={word}
+                key={index}
+                textStyle={'font-medium text-3xl text-primary'}
+              />
+            ))}
+          </View>
+          <View className="flex-row flex-wrap leading-8 mt-2">
+            {item.articleSummary
+              ?.split(' ')
+              .map((word, index) => (
+                <PopoverView
+                  word={word}
+                  key={index}
+                  textStyle={'font-sans text-lg leading-6 text-gray-800'}
+                />
+              ))}
+          </View>
         </ScrollView>
       </CustomToUpModal>
     </View>
