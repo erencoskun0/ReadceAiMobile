@@ -9,7 +9,10 @@ import ExploreScreen from './src/screens/ExploreScreen';
 import TabNavigator from './src/navigation/TabNavigator';
 import { useFonts } from 'expo-font';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
+import AuthNavigator from './src/navigation/AuthNavigator';
+import { useState } from 'react';
+import { Provider } from 'react-redux';
+import {store} from './src/Redux/Store/store';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -25,14 +28,21 @@ export default function App() {
       },
     },
   });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <QueryClientProvider client={client}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Splash" component={SplashScreen} />
-          <Stack.Screen name="Home" component={TabNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Splash" component={SplashScreen} />
+            {isLoggedIn ? (
+              <Stack.Screen name="Home" component={TabNavigator} />
+            ) : (
+              <Stack.Screen name="Auth" component={AuthNavigator} />
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     </QueryClientProvider>
   );
 }

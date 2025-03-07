@@ -9,6 +9,10 @@ import SearchScreen from '../screens/SearchScreen';
 import DictionaryScreen from '../screens/DictionaryScreen';
 import ArticleDetailScreen from '../screens/ArticleDetailScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ArticleAllLangLevelScreen from '../screens/ArticleAllLangLevelScreen';
+import ArticleAllLangScreen from '../screens/ArticleAllLangScreen';
+import ArticleAllTypeScreen from '../screens/ArticleAllTypeScreen';
+import ArticleAllCategoryScreen from '../screens/ArticleAllCategoryScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +21,10 @@ const ExploreStack = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="KeşfetMain" component={ExploreScreen} />
       <Stack.Screen name="ArticleDetailScreen" component={ArticleDetailScreen} />
+      <Stack.Screen name="ArticleAllLangLevelScreen" component={ArticleAllLangLevelScreen} />
+      <Stack.Screen name="ArticleAllLangScreen" component={ArticleAllLangScreen} />
+      <Stack.Screen name="ArticleAllTypeScreen" component={ArticleAllTypeScreen} />
+      <Stack.Screen name="ArticleAllCategoryScreen" component={ArticleAllCategoryScreen} />
     </Stack.Navigator>
   );
 };
