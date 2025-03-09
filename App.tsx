@@ -11,8 +11,11 @@ import { useFonts } from 'expo-font';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AuthNavigator from './src/navigation/AuthNavigator';
 import { useState } from 'react';
-import { Provider } from 'react-redux';
-import {store} from './src/Redux/Store/store';
+import { Provider, useSelector } from 'react-redux';
+import { RootState, store } from './src/Redux/Store/store';
+import ToastManager from 'toastify-react-native';
+import IsAuth from './src/hooks/IsAuth';
+import AppContent from './src/AppContent';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -28,20 +31,10 @@ export default function App() {
       },
     },
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <QueryClientProvider client={client}>
       <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Splash" component={SplashScreen} />
-            {isLoggedIn ? (
-              <Stack.Screen name="Home" component={TabNavigator} />
-            ) : (
-              <Stack.Screen name="Auth" component={AuthNavigator} />
-            )}
-          </Stack.Navigator>
-        </NavigationContainer>
+        <AppContent />
       </Provider>
     </QueryClientProvider>
   );

@@ -38,7 +38,7 @@ const ExploreTypeSomeArticles = () => {
     queryFn: () => GetAllArticlesByTypeId(randomArticle?.id),
     enabled: !!randomArticle,
   });
-  console.log(SomeArticlesByTypeData);
+ 
   const navigation = useNavigation<any>();
   if(SomeArticlesByTypeData?.length === 0) return null;
   return (

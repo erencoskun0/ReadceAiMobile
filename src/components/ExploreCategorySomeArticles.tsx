@@ -45,7 +45,7 @@ const ExploreCategorySomeArticles = () => {
     queryFn: () => GetAllArticlesByCategoryId(randomArticle?.id),
     enabled: !!randomArticle,
   });
-  console.log(SomeArticlesByCategoryData);
+  
   const navigation = useNavigation<any>();
   if (SomeArticlesByCategoryData?.length === 0) return null;
   return (
