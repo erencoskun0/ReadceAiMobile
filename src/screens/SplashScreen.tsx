@@ -1,10 +1,17 @@
 import { View, Text, Image } from 'react-native';
 import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../Redux/Store/store';
 
 export default function SplashScreen({ navigation }: any) {
+  const { isAuthenticated } = useSelector((state: RootState) => state.authUser);
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace('Auth');
+      if (isAuthenticated) {
+        navigation.replace('Home');
+      } else {
+        navigation.replace('Auth');
+      }
     }, 2000);
   }, [navigation]);
 

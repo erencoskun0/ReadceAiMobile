@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import customRequest from '../../utils/customRequest';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { extractFirstErrorMessage } from '../../utils/extractErrorMessage';
+import { Toast } from 'toastify-react-native';
 type initialAuthTypes = {
   loading: boolean;
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | undefined;
   userId: string | null;
   isPremium: boolean;
   userEmail: string | null;
@@ -11,12 +13,38 @@ type initialAuthTypes = {
 
 const initialState: initialAuthTypes = {
   loading: false,
-  isAuthenticated: false,
+  isAuthenticated: false, // Varsayılan olarak `false`
   userId: null,
   isPremium: false,
   userEmail: null,
 };
-
+export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
+  try {
+    const value = await AsyncStorage.getItem('guest');
+    if (value !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('AsyncStorage error:', error);
+  }
+});
+export const guestAuth = createAsyncThunk('auth/guestAuth', async () => {
+  try {
+    await AsyncStorage.setItem('guest', 'true');
+  } catch (error) {
+    console.error('AsyncStorage error:', error);
+  }
+});
+export const guestLogOut = createAsyncThunk('auth/guestLogOut', async () => {
+  try {
+    await AsyncStorage.removeItem('guest');
+    return false;
+  } catch (error) {
+    console.error('AsyncStorage error:', error);
+  }
+});
 export const userLogin = createAsyncThunk(
   'userLogin',
   async ({ email, password }: { email: string; password: string }) => {
@@ -30,7 +58,7 @@ export const userLogin = createAsyncThunk(
   }
 );
 export const userRegister = createAsyncThunk(
-  'userLogin',
+  'userRegister',
   async ({
     username,
     email,
@@ -56,7 +84,15 @@ export const userRegister = createAsyncThunk(
         learningLanguageId,
       });
       return response.data;
-    } catch (error) {}
+    } catch (error: any) {
+      console.log(error.response?.data.message);
+      if (error) {
+        Toast.warn(extractFirstErrorMessage(error.response?.data.message));
+      } else {
+        Toast.warn('Bilinmeyen bir hata oluştu!');
+      }
+      return error.response?.data;
+    }
   }
 );
 
@@ -82,6 +118,30 @@ export const authSlice = createSlice({
       state.userId = null;
       state.loading = false;
     });
+    builder
+      .addCase(checkAuth.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = action.payload;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+      });
+    builder
+      .addCase(guestLogOut.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(guestLogOut.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = action.payload;
+      })
+      .addCase(guestLogOut.rejected, (state) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+      });
   },
 });
 
