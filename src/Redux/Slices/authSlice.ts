@@ -85,13 +85,13 @@ export const userRegister = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      console.log(error.response?.data.message);
-      if (error) {
-        Toast.warn(extractFirstErrorMessage(error.response?.data.message));
-      } else {
-        Toast.warn('Bilinmeyen bir hata oluştu!');
-      }
-      return error.response?.data;
+      Toast.error(
+        error.response.data.errors[0]
+          ?.replace('Username', 'Kullanıcı Adı')
+          ?.replace('Password', 'Şifre')
+          ?.replace('Confirm Password', 'Şifre Tekrarı')
+      );
+      return error.response.data.errors;
     }
   }
 );
@@ -139,6 +139,17 @@ export const authSlice = createSlice({
         state.isAuthenticated = action.payload;
       })
       .addCase(guestLogOut.rejected, (state) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+      });
+    builder
+      .addCase(userRegister.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(userRegister.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(userRegister.rejected, (state) => {
         state.loading = false;
         state.isAuthenticated = false;
       });
