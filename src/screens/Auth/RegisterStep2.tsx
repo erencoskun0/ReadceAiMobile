@@ -19,7 +19,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import CustomHeader from '../../components/CustomHeader';
 import { useDispatch } from 'react-redux';
-import { userRegister } from '../../Redux/Slices/authSlice';
+import { userLogin, userRegister } from '../../Redux/Slices/authSlice';
 import { AppDispatch } from '../../Redux/Store/store';
 import { Toast } from 'toastify-react-native';
 import { extractFirstErrorMessage } from '../../utils/extractErrorMessage';
@@ -62,20 +62,32 @@ const RegisterStep2 = () => {
   });
   const dispatch = useDispatch<AppDispatch>();
 
-  const handlerLogin = async () => {
-    try {
-      const response = await dispatch(
-        userRegister({
-          email: email,
-          confirmPassword: repPassword,
-          learningLanguageId: targetLang.id,
-          nativeLanguageId: nativeLang.id,
-          password: password,
-          username: username,
-        })
-      );
-    } catch (error: any) {
-      Toast.warn('Bilinmeyen bir hata oluştu!');
+  const handlerRegister = async () => {
+    if (nativeLang.id && targetLang.id) {
+      try {
+        const response = await dispatch(
+          userRegister({
+            email: email,
+            confirmPassword: repPassword,
+            learningLanguageId: targetLang.id,
+            nativeLanguageId: nativeLang.id,
+            password: password,
+            username: username,
+          })
+        );
+        if (response.payload.message == 'Kullanıcı başarıyla kaydedildi.') {
+          Toast.success('Kayıt Tamamlandı Giriş Yapılıyor');
+          await dispatch(
+            userLogin({ email: response.meta.arg.email, password: response.meta.arg.password })
+          );
+        }
+        console.log(response);
+      } catch (error: any) {
+        console.log(error, 'dsvds');
+        Toast.warn('Bilinmeyen bir hata oluştu!');
+      }
+    } else {
+      Toast.warn('Dil seçimi boş olamaz');
     }
   };
 
@@ -92,6 +104,14 @@ const RegisterStep2 = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 20}
       className="flex-1 bg-white">
+      {' '}
+      <CustomHeader
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+        pt={'pt-[4]'}
+        titleSize={'text-xl'}
+      />
       <SafeAreaView className="flex-1 bg-white">
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
@@ -256,7 +276,7 @@ const RegisterStep2 = () => {
             }}
             className="relative mb-24 mt-auto flex-row items-center justify-center rounded-xl bg-primary p-4"
             onPress={() => {
-              handlerLogin();
+              handlerRegister();
             }}>
             <Text className="font-semibold text-lg text-white">Kayıt Ol</Text>
           </TouchableOpacity>
