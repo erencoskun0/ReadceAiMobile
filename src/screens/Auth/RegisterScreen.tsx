@@ -16,6 +16,9 @@ import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Toast } from 'toastify-react-native';
 import { isValidEmail } from '../../utils/emailControl';
+import { checkGuestAuth, guestAuth } from '../../Redux/Slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../Redux/Store/store';
 
 const RegisterScreen = () => {
   const navigation = useNavigation<any>();
@@ -24,6 +27,7 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repPassword, setRepPassword] = useState('');
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -143,13 +147,9 @@ const RegisterScreen = () => {
           </View>
           <TouchableOpacity
             onPress={async () => {
-              try {
-                await Keychain.setGenericPassword('guest', 'true');
-                console.log('Guest mode kaydedildi!');
-                navigation.navigate('Keşfet');
-              } catch (error) {
-                console.log('Hata:', error);
-              }
+              await dispatch(guestAuth());
+              await dispatch(checkGuestAuth());
+              
             }}
             className="  absolute bottom-2 left-1/2 -translate-x-1/2  items-center rounded-xl   p-2">
             <Text className="text-md font-semibold text-primary underline">

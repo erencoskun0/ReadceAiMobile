@@ -21,6 +21,11 @@ import WordCard from '../components/WordCard';
 import WordCardContainer from '../components/WordCardContainer';
 import PopoverView from '../components/PopoverView';
 import PopoverContainer from '../components/PopoverContainer';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { AddRemoveArticlePuan, GetArticlePuanInfo } from '../services/apiArticleDetail';
+import { useSelector } from 'react-redux';
+import { RootState } from '../Redux/Store/store';
+import { Toast } from 'toastify-react-native';
 const { height: DEVICE_HEIGHT } = Dimensions.get('window');
 const ArticleDetailScreen = () => {
   const navigation = useNavigation<any>();
@@ -28,6 +33,23 @@ const ArticleDetailScreen = () => {
   const { item }: { item: GetAllArticlesIsPublicType } = route.params;
   const [isSummaryVisible, setIsSummaryVisible] = useState(false);
   const [isRead, setIsRead] = useState(false);
+  const { userId } = useSelector((state: RootState) => state.authUser);
+  const { data: articlePuanInfoData, refetch } = useQuery({
+    queryKey: ['articlePuanInfo', item.id, userId],
+    queryFn: () => GetArticlePuanInfo(userId ? userId : null, item.id),
+    enabled: !!item.id,
+  });
+  const { mutate: updateArticlePuanPost, isPending } = useMutation({
+    mutationFn: (data: { userId: string; articleId: string }) =>
+      AddRemoveArticlePuan(data.userId, data.articleId),
+    mutationKey: ['updateArticlePuan'],
+    onSuccess: (data) => {
+      refetch();
+    },
+    onError: (error) => {
+      console.error('Güncelleme yapılırken hata oluştu:', error);
+    },
+  });
 
   return (
     <View>
@@ -55,10 +77,26 @@ const ArticleDetailScreen = () => {
           <View className="my-4 flex-row-reverse  flex-wrap items-center justify-between  ">
             <View className="flex-row-reverse items-center gap-1">
               {' '}
-              <TouchableOpacity className=" flex-row items-center rounded-full bg-primary/10 p-2">
+              <TouchableOpacity
+                onPress={() => {
+                  if (userId) {
+                    updateArticlePuanPost({ userId: userId, articleId: item.id });
+                  } else {
+                    Toast.warn('Giriş Yapmalısın!');
+                  }
+                }}
+                className=" flex-row items-center rounded-full bg-primary/10 p-2">
                 {/* <AntDesign name="staro" size={18} color="#000957" /> */}
-                <AntDesign name="star" size={18} color="#000957" />
-                <Text className="font-PoppinsMedium ml-1 text-sm text-primary">129</Text>
+                <AntDesign
+                  name={articlePuanInfoData?.isAddedUser ? 'star' : 'staro'}
+                  size={18}
+                  color={articlePuanInfoData?.isAddedUser ? 'orange' : '#000957'}
+                />
+                <Text className="font-PoppinsMedium ml-1 text-sm text-primary">
+                  {articlePuanInfoData?.articlePuan
+                    ? articlePuanInfoData?.articlePuan
+                    : item.articlePuan}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="mr-3 flex-row items-center rounded-full bg-primary/10 p-2"
@@ -145,7 +183,7 @@ const ArticleDetailScreen = () => {
       <CustomToUpModal isVisible={isSummaryVisible} setIsVisible={setIsSummaryVisible}>
         <ScrollView className="px-6 pb-8" showsVerticalScrollIndicator={false}>
           <Text className="mb-3 text-center font-semibold text-xl text-primary">Özet</Text>
-          <View className="  flex-row flex-wrap leading-8" >
+          <View className="  flex-row flex-wrap leading-8">
             {item.articleTitle.split(' ').map((word, index) => (
               <PopoverView
                 word={word}
@@ -154,7 +192,7 @@ const ArticleDetailScreen = () => {
               />
             ))}
           </View>
-          <View className="flex-row flex-wrap leading-8 mt-2">
+          <View className="mt-2 flex-row flex-wrap leading-8">
             {item.articleSummary
               ?.split(' ')
               .map((word, index) => (

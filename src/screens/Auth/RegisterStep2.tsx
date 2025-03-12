@@ -11,18 +11,16 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-} from 'react-native';
-import { SelectList } from 'react-native-dropdown-select-list';
+} from 'react-native'; 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import CustomHeader from '../../components/CustomHeader';
 import { useDispatch } from 'react-redux';
-import { userLogin, userRegister } from '../../Redux/Slices/authSlice';
+import { checkGuestAuth, guestAuth, userLogin, userRegister } from '../../Redux/Slices/authSlice';
 import { AppDispatch } from '../../Redux/Store/store';
-import { Toast } from 'toastify-react-native';
-import { extractFirstErrorMessage } from '../../utils/extractErrorMessage';
+import { Toast } from 'toastify-react-native'; 
 
 type langType = {
   id: string;
@@ -77,9 +75,10 @@ const RegisterStep2 = () => {
         );
         if (response.payload.message == 'Kullanıcı başarıyla kaydedildi.') {
           Toast.success('Kayıt Tamamlandı Giriş Yapılıyor');
-          await dispatch(
+          const loginResponse = await dispatch(
             userLogin({ email: response.meta.arg.email, password: response.meta.arg.password })
           );
+          navigation.navigate('Home');
         }
         console.log(response);
       } catch (error: any) {
@@ -283,13 +282,8 @@ const RegisterStep2 = () => {
           <TouchableOpacity
             className="  absolute bottom-2 left-1/2 -translate-x-1/2  items-center rounded-xl   p-2"
             onPress={async () => {
-              try {
-                await Keychain.setGenericPassword('guest', 'true');
-                console.log('Guest mode kaydedildi!');
-                navigation.navigate('Keşfet');
-              } catch (error) {
-                console.log('Hata:', error);
-              }
+              await dispatch(guestAuth());
+              await dispatch(checkGuestAuth());
             }}>
             <Text className="text-md font-semibold text-primary underline">
               Misafir Olarak Devam Et

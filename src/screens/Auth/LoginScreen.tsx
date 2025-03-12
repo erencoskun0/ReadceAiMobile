@@ -16,12 +16,26 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../Redux/Store/store';
-import { checkAuth, guestAuth } from '../../Redux/Slices/authSlice';
+import { checkGuestAuth, guestAuth, userLogin } from '../../Redux/Slices/authSlice';
+import { Toast } from 'toastify-react-native';
 
 const LoginScreen = () => {
   const navigation = useNavigation<any>();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+
+  const handlerLogin = async () => {
+    try {
+      console.log('girdi');
+      const loginResponse = await dispatch(userLogin({ email: email, password: password }));
+       
+    } catch (error: any) {
+      console.log(error, 'dsvds');
+      Toast.warn('Bilinmeyen bir hata oluştu!');
+    }
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -56,6 +70,8 @@ const LoginScreen = () => {
                   placeholderTextColor="#000957"
                   className="ml-3 flex-1 py-1 font-sans text-lg text-primary"
                   keyboardType="email-address"
+                  value={email}
+                  onChangeText={setEmail}
                 />
               </View>
               <View className="mb-2 flex-row items-center border-b border-primary pb-2">
@@ -65,6 +81,8 @@ const LoginScreen = () => {
                   placeholderTextColor="#000957"
                   className="ml-3 flex-1 py-1 font-sans text-lg text-primary"
                   secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={setPassword}
                 />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                   <Ionicons
@@ -88,14 +106,14 @@ const LoginScreen = () => {
                 elevation: 7,
               }}
               className="relative mb-24 mt-auto  w-full flex-row items-center justify-center rounded-xl bg-primary p-4"
-              onPress={() => navigation.navigate('Home')}>
+              onPress={() => handlerLogin()}>
               <Text className="font-semibold text-lg text-white">Giriş Yap</Text>
             </TouchableOpacity>
-            {/* Kayıt Ol Bölümü */}
+
             <View className="absolute bottom-8 left-1/2 mb-6 -translate-x-1/2 flex-row items-center justify-center">
-              <Text className="font-sans text-base text-gray-500">Hesabın yok mu? </Text>
+              <Text className="font-sans   text-gray-500">Hesabın yok mu? </Text>
               <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
-                <Text className="font-semibold text-base text-primary"> Kayıt Ol</Text>
+                <Text className="font-semibold   text-primary"> Kayıt Ol</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -103,8 +121,7 @@ const LoginScreen = () => {
             className="  absolute bottom-2 left-1/2 -translate-x-1/2  items-center rounded-xl   p-2"
             onPress={async () => {
               await dispatch(guestAuth());
-              await dispatch(checkAuth());
-              navigation.navigate('Home');
+              await dispatch(checkGuestAuth());
             }}>
             <Text className="text-md font-semibold text-primary underline">
               Misafir Olarak Devam Et

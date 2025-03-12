@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { Provider, useSelector } from 'react-redux';
 import { RootState, store } from './src/Redux/Store/store';
 import ToastManager from 'toastify-react-native';
-import IsAuth from './src/hooks/IsAuth';
+
 import AppContent from './src/AppContent';
 const Stack = createNativeStackNavigator();
 export default function App() {
