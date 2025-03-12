@@ -165,7 +165,7 @@ export const authSlice = createSlice({
         if (action.payload?.token) {
           const decodedToken = jwtDecode<any>(action.payload?.token);
           state.userEmail = decodedToken.email;
-          state.userId = decodedToken.jti;
+          state.userId = decodedToken.userId;
           state.role = decodedToken.role;
         }
       })
@@ -222,7 +222,7 @@ export const authSlice = createSlice({
 
           const decodedToken = jwtDecode<any>(action.payload.token);
           state.userEmail = decodedToken.email;
-          state.userId = decodedToken.jti;
+          state.userId = decodedToken.userId;
           state.role = decodedToken.role;
         }
       })

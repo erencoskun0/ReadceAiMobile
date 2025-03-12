@@ -3,6 +3,7 @@ export type GetAllArticlesIsPublicType = {
   articleTitle: string;
   articleSummary: string;
   articleContent: string;
+  articlePuan: number;
   articleImage: string;
   language: {
     langId: string;
