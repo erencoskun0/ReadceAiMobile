@@ -4,16 +4,18 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../Redux/Store/store';
 
 export default function SplashScreen({ navigation }: any) {
-  const { isAuthenticated } = useSelector((state: RootState) => state.authUser);
+  const { isAuthenticated, isGuest } = useSelector((state: RootState) => state.authUser);
   useEffect(() => {
     setTimeout(() => {
-      if (isAuthenticated) {
+      if (isGuest) {
+        navigation.replace('Home');
+      } else if (isAuthenticated) {
         navigation.replace('Home');
       } else {
         navigation.replace('Auth');
       }
-    }, 2000);
-  }, [navigation]);
+    }, 1000);
+  }, [navigation, isAuthenticated, isGuest]);
 
   return (
     <View className="flex-1 items-center justify-center bg-secondary">
