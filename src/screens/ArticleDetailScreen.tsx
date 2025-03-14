@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import { GetAllArticlesIsPublicType } from '../types/apiExploreType';
@@ -22,10 +23,18 @@ import WordCardContainer from '../components/WordCardContainer';
 import PopoverView from '../components/PopoverView';
 import PopoverContainer from '../components/PopoverContainer';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { AddRemoveArticlePuan, GetArticlePuanInfo } from '../services/apiArticleDetail';
+import {
+  AddArticleUserProgress,
+  AddRemoveArticlePuan,
+  ComplateArticleUserProgress,
+  GetArticlePuanInfo,
+  GetArticleUserProgressInfo,
+} from '../services/apiArticleDetail';
 import { useSelector } from 'react-redux';
 import { RootState } from '../Redux/Store/store';
 import { Toast } from 'toastify-react-native';
+import { formatLongDate, formatShortDate, getDaysBetween } from '../utils/globalDay';
+import CustomLoaderWord from '../components/CustomLoaderWord';
 const { height: DEVICE_HEIGHT } = Dimensions.get('window');
 const ArticleDetailScreen = () => {
   const navigation = useNavigation<any>();
@@ -39,6 +48,15 @@ const ArticleDetailScreen = () => {
     queryFn: () => GetArticlePuanInfo(userId ? userId : null, item.id),
     enabled: !!item.id,
   });
+  const {
+    data: ArticleUserProgressInfoData,
+    isLoading: isLoadingProgress,
+    refetch: progressRefetch,
+  } = useQuery({
+    queryKey: ['ArticleUserProgressInfo', item.id, userId],
+    queryFn: () => GetArticleUserProgressInfo(userId ? userId : null, item.id),
+    enabled: !!item.id && !!userId,
+  });
   const { mutate: updateArticlePuanPost, isPending } = useMutation({
     mutationFn: (data: { userId: string; articleId: string }) =>
       AddRemoveArticlePuan(data.userId, data.articleId),
@@ -50,7 +68,37 @@ const ArticleDetailScreen = () => {
       console.error('Güncelleme yapılırken hata oluştu:', error);
     },
   });
-
+  const { mutate: AddArticleUserProgressPost, isPending: isProgressPending } = useMutation({
+    mutationFn: () => {
+      if (!userId || !item?.id) {
+        return Promise.reject(new Error('User ID veya Item ID eksik'));
+      }
+      return AddArticleUserProgress(userId, item.id);
+    },
+    mutationKey: ['AddArticleUserProgress'],
+    onSuccess: () => {
+      progressRefetch();
+    },
+    onError: (error) => {
+      console.error('Güncelleme yapılırken hata oluştu:', error);
+    },
+  });
+  const { mutate: ComplateArticleUserProgressPost } = useMutation({
+    mutationFn: () => {
+      if (!userId || !item?.id) {
+        return Promise.reject(new Error('User ID veya Item ID eksik'));
+      }
+      return ComplateArticleUserProgress(userId, item.id);
+    },
+    mutationKey: ['ComplateArticleUserProgress'],
+    onSuccess: () => {
+      progressRefetch();
+      console.log(ArticleUserProgressInfoData, 'asfas');
+    },
+    onError: (error) => {
+      console.error('Güncelleme yapılırken hata oluştu:', error);
+    },
+  });
   return (
     <View>
       <CustomHeader
@@ -72,7 +120,6 @@ const ArticleDetailScreen = () => {
             resizeMode="cover"
           />
         </View>
-
         <View className="mt-1 px-4">
           <View className="my-4 flex-row-reverse  flex-wrap items-center justify-between  ">
             <View className="flex-row-reverse items-center gap-1">
@@ -98,12 +145,14 @@ const ArticleDetailScreen = () => {
                     : item.articlePuan}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                className="mr-3 flex-row items-center rounded-full bg-primary/10 p-2"
-                onPress={() => setIsSummaryVisible(true)}>
-                <Ionicons name="document-text" size={18} color="#000957" />
-                <Text className="font-PoppinsMedium ml-1 text-sm text-primary">Özet</Text>
-              </TouchableOpacity>
+              {ArticleUserProgressInfoData && !ArticleUserProgressInfoData?.isStarted && (
+                <TouchableOpacity
+                  className="mr-3 flex-row items-center rounded-full bg-primary/10 p-2"
+                  onPress={() => setIsSummaryVisible(true)}>
+                  <Ionicons name="document-text" size={18} color="#000957" />
+                  <Text className="font-PoppinsMedium ml-1 text-sm text-primary">Özet</Text>
+                </TouchableOpacity>
+              )}
             </View>
 
             <View className=" flex-row items-center gap-2">
@@ -164,21 +213,85 @@ const ArticleDetailScreen = () => {
         <View className=" mt-1 flex-row items-center gap-2 px-4">
           <Ionicons name="reader-outline" size={20} color="#000957" />
           <Text className="Medium font-sans text-primary">
-            Okuma Süresi: {Math.ceil(item.articleContent.length / 400)} dakika
+            Okuma Süresi: {Math.ceil(item.articleContent.length / 100)} dakika
           </Text>
         </View>
-        {isRead ? (
-          <PopoverContainer content={item?.articleContent} />
-        ) : (
+
+        {isLoadingProgress && <ActivityIndicator size="large" color="#0000ff" />}
+
+        {ArticleUserProgressInfoData && (
+          <View className="mx-4 my-2 rounded-xl bg-secondary/80 px-2 py-3 shadow-sm">
+            <View className=" mx-auto flex-col items-start gap-3">
+              <View className="flex-row items-center justify-center gap-1 ">
+                <Ionicons name="calendar" size={20} color="#000957" />{' '}
+                <Text className="font-medium text-sm text-primary">
+                  {ArticleUserProgressInfoData && ArticleUserProgressInfoData?.isStarted ? (
+                    <>
+                      <Text className="font-bold text-primary">
+                        {formatLongDate(ArticleUserProgressInfoData?.startedDate?.split('T')[0])}
+                      </Text>{' '}
+                      tarihinde okumaya başladınız
+                    </>
+                  ) : (
+                    'Henüz okumaya başlamadınız'
+                  )}
+                </Text>
+              </View>
+
+              {ArticleUserProgressInfoData && ArticleUserProgressInfoData?.isFinished && (
+                <View className="flex-row items-center justify-center gap-1 ">
+                  <Ionicons name="calendar" size={20} color="#000957" />{' '}
+                  <Text className="font-medium text-sm text-primary">
+                    <>
+                      <Text className="font-bold text-primary">
+                        {formatLongDate(ArticleUserProgressInfoData?.finishedDate?.split('T')[0])}
+                      </Text>{' '}
+                      tarihinde okumayı bitirdiniz
+                    </>
+                  </Text>
+                </View>
+              )}
+              {ArticleUserProgressInfoData?.finishedDate && (
+                <View className="flex-row items-center justify-center gap-1">
+                  <Ionicons name="time" size={20} color="#000957" />
+                  <Text className="font-medium text-sm text-primary">
+                    Toplam okuma süresi:{' '}
+                    {getDaysBetween(
+                      ArticleUserProgressInfoData?.startedDate?.split('T')[0],
+                      ArticleUserProgressInfoData?.finishedDate?.split('T')[0]
+                    )}{' '}
+                    Gün
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+        {ArticleUserProgressInfoData && !ArticleUserProgressInfoData.isStarted ? (
           <TouchableOpacity
-            onPress={() => setIsRead(true)}
+            onPress={() => AddArticleUserProgressPost()}
             className="mx-auto mt-10 w-[80%] rounded-full bg-red-500 py-2">
             <Text className="text-center font-semibold text-lg text-white ">
-              {' '}
               Şimdi Okumaya Başla
             </Text>
           </TouchableOpacity>
-        )}
+        ) : !isLoadingProgress &&
+          ArticleUserProgressInfoData &&
+          !ArticleUserProgressInfoData?.isFinished ? (
+          <PopoverContainer
+            finishQuery={ArticleUserProgressInfoData && ArticleUserProgressInfoData.isFinished}
+            content={item?.articleContent}
+            handlerFinish={ComplateArticleUserProgressPost}
+          />
+        ) : !isLoadingProgress ? (
+          <TouchableOpacity
+            onPress={() => AddArticleUserProgressPost()}
+            className="mx-auto mt-10 w-[80%] rounded-full bg-blue-500 py-2">
+            <Text className="text-center font-semibold text-lg text-white ">
+              Tekrar Okumaya Başla
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </ScrollView>
       <CustomToUpModal isVisible={isSummaryVisible} setIsVisible={setIsSummaryVisible}>
         <ScrollView className="px-6 pb-8" showsVerticalScrollIndicator={false}>

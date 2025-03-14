@@ -7,19 +7,24 @@ import axios from 'axios';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Ionicons } from '@expo/vector-icons';
 import CustomLoaderWord from './CustomLoaderWord';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import FlatArticleItem from './FlatArticleItem';
 
 const ExploreForYou = () => {
   const {
     data: AllArticlesIsPublicData,
     isLoading,
-    error,
+    refetch,
   } = useQuery({
     queryKey: ['AllArticlesIsPublic'],
     queryFn: () => GetAllArticlesIsPublic(),
   });
   const navigation = useNavigation<any>();
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [])
+  );
   return (
     <>
       {isLoading && <CustomLoaderWord />}

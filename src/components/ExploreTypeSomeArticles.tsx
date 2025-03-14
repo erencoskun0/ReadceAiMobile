@@ -7,7 +7,7 @@ import axios from 'axios';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Ionicons } from '@expo/vector-icons';
 import CustomLoaderWord from './CustomLoaderWord';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import FlatArticleItem from './FlatArticleItem';
 const articleTypes = [
   { id: '591CB9F4-B8D2-462C-AE7E-241A46E88186', name: 'Hikaye' },
@@ -32,15 +32,19 @@ const ExploreTypeSomeArticles = () => {
   const {
     data: SomeArticlesByTypeData,
     isLoading,
-    error,
+    refetch,
   } = useQuery({
     queryKey: ['SomeArticlesByTypeId', randomArticle?.id],
     queryFn: () => GetAllArticlesByTypeId(randomArticle?.id),
     enabled: !!randomArticle,
   });
- 
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [])
+  );
   const navigation = useNavigation<any>();
-  if(SomeArticlesByTypeData?.length === 0) return null;
+  if (SomeArticlesByTypeData?.length === 0) return null;
   return (
     <>
       <View className="mb-2">
@@ -57,9 +61,7 @@ const ExploreTypeSomeArticles = () => {
           data={SomeArticlesByTypeData?.slice(0, 8)}
           contentContainerStyle={{ paddingHorizontal: 16 }}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <FlatArticleItem item={item} />
-          )}
+          renderItem={({ item }) => <FlatArticleItem item={item} />}
         />
       </View>
     </>

@@ -11,16 +11,19 @@ import {
 import Popover from 'react-native-popover-view';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { speak } from '../utils/speakExpo';
-import { GetTextMeanByText } from '../services/apiWord';
+import { AddWordUserProgress, GetTextMeanByText } from '../services/apiWord';
 import { isEnabled } from 'react-native/Libraries/Performance/Systrace';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AntDesign, Entypo } from '@expo/vector-icons';
+import { RootState } from '../Redux/Store/store';
+import { useSelector } from 'react-redux';
+import { Toast } from 'toastify-react-native';
 
 const PopoverView = ({ word, textStyle }: any) => {
   const [isVisible, setIsVisible] = useState(false);
   const touchableRef = useRef<any>(null);
   const noTouchableRef = useRef<any>(null);
-
+  const { userId } = useSelector((state: RootState) => state.authUser);
   const cleanWord = (word: string) => {
     return word.replace(/^[\s\p{P}]+|[\s\p{P}]+$/gu, '');
   };
@@ -42,13 +45,35 @@ const PopoverView = ({ word, textStyle }: any) => {
     refetchOnReconnect: false,
     retry: 1,
     retryDelay: 1000,
-    select: useCallback((data:any) => {
+    select: useCallback((data: any) => {
       // Veriyi component içinde transform etmek yerine
       return {
         ...data,
         formattedDesc: data?.wordDesc?.split(',')?.join(', '),
       };
     }, []),
+  });
+
+  const { mutate: AddWordUserProgressPost, isPending: isProgressPending } = useMutation({
+    mutationFn: () => {
+      if (!userId || !wordData) {
+        return Promise.reject(new Error('User ID veya wordData eksik'));
+      }
+      return AddWordUserProgress(
+        userId,
+        wordData.wordId,
+        wordData.wordMeanId,
+        wordData.nativeLanguageId,
+        wordData.learningLanguageId
+      );
+    },
+    mutationKey: ['AddWordUserProgress'],
+    onSuccess: () => {
+      Toast.success('Kelime başarıyla sözlüğe eklendi');
+    },
+    onError: () => {
+      Toast.info('Kelime zaten sözlüğünüzde');
+    },
   });
   return (
     <>
@@ -116,8 +141,12 @@ const PopoverView = ({ word, textStyle }: any) => {
               </View>
             )}
 
-            {/* Ana Aksiyon Butonu */}
-            <TouchableOpacity className="w-full flex-row items-center justify-center rounded-xl bg-secondary/90 p-4 transition-all hover:bg-secondary active:scale-95">
+            <TouchableOpacity
+              onPress={() => {
+                AddWordUserProgressPost();
+                setIsVisible(false);
+              }}
+              className="w-full flex-row items-center justify-center rounded-xl bg-secondary/90 p-4 transition-all hover:bg-secondary active:scale-95">
               <Entypo name="plus" size={24} color="white" />
               <Text className="font-PoppinsSemiBold ml-2 text-white">Sözlüğe Ekle</Text>
             </TouchableOpacity>

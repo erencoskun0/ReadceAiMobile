@@ -10,6 +10,7 @@ type initialAuthTypes = {
   userId: string | null;
   role: string | null;
   userEmail: string | null;
+  learningId: string | null;
 };
 
 const initialState: initialAuthTypes = {
@@ -19,6 +20,7 @@ const initialState: initialAuthTypes = {
   userId: null,
   role: null,
   userEmail: null,
+  learningId: 'E831E529-7ACF-433A-BD4F-19707BDAE98C',
 };
 export const checkGuestAuth = createAsyncThunk('auth/checkGuestAuth', async () => {
   try {
