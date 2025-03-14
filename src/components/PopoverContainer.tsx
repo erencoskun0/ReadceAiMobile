@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import PopoverView from './PopoverView';
 
@@ -8,17 +8,23 @@ function processText(text: string) {
   return spacedText.split(/\s+/).filter((token) => token.length > 0);
 }
 
-const PopoverContainer = ({ content }: { content: string }) => {
+const PopoverContainer = ({
+  content,
+  handlerFinish,
+  finishQuery,
+}: {
+  content: string;
+  handlerFinish: any;
+  finishQuery: boolean;
+}) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [processedWords, setProcessedWords] = useState<string[]>([]);
 
   useEffect(() => {
-    // İçeriği işleyip state'e kaydediyoruz
     const words = processText(content);
     setProcessedWords(words);
 
-    // Yükleme işlemi tamamlandı olarak işaretleniyor
-    setTimeout(() => setIsLoaded(true), 500); // Simüle etmek için 500ms gecikme ekledim
+    setTimeout(() => setIsLoaded(true), 500);
   }, [content]);
 
   return (
@@ -37,6 +43,13 @@ const PopoverContainer = ({ content }: { content: string }) => {
               <PopoverView key={index} word={word} textStyle={'font-medium text-lg text-primary'} />
             );
           })}
+          {!finishQuery && (
+            <TouchableOpacity
+              onPress={() => handlerFinish()}
+              className="mx-auto mt-10 w-[80%] rounded-full bg-blue-500 py-2">
+              <Text className="text-center font-semibold text-lg text-white ">Okumayı Bitir</Text>
+            </TouchableOpacity>
+          )}
         </View>
       ) : (
         <ActivityIndicator size="large" color="#0000ff" />

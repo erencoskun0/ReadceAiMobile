@@ -11,7 +11,7 @@ import axios from 'axios';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Ionicons } from '@expo/vector-icons';
 import CustomLoaderWord from './CustomLoaderWord';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import FlatArticleItem from './FlatArticleItem';
 const articleCategories = [
   { id: '2A72E9B9-1C47-4C09-9432-0B9A818D1C91', name: 'Teknoloji' },
@@ -39,13 +39,17 @@ const ExploreCategorySomeArticles = () => {
   const {
     data: SomeArticlesByCategoryData,
     isLoading,
-    error,
+    refetch,
   } = useQuery({
     queryKey: ['SomeAllArticlesByCategoryId', randomArticle?.id],
     queryFn: () => GetAllArticlesByCategoryId(randomArticle?.id),
     enabled: !!randomArticle,
   });
-  
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [])
+  );
   const navigation = useNavigation<any>();
   if (SomeArticlesByCategoryData?.length === 0) return null;
   return (
