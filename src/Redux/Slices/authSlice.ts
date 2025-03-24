@@ -5,7 +5,7 @@ import { Toast } from 'toastify-react-native';
 import { jwtDecode } from 'jwt-decode';
 type initialAuthTypes = {
   loading: boolean;
-  isAuthenticated: boolean | undefined;
+  isAuthenticated: boolean | undefined | null;
   isGuest: boolean | undefined;
   userId: string | null;
   role: string | null;
@@ -15,7 +15,7 @@ type initialAuthTypes = {
 
 const initialState: initialAuthTypes = {
   loading: false,
-  isAuthenticated: false,
+  isAuthenticated: null,
   isGuest: false,
   userId: null,
   role: null,

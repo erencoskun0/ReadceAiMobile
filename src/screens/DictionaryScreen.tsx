@@ -15,6 +15,7 @@ import { RootState } from '../Redux/Store/store';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { speak } from '../utils/speakExpo';
 
 const DictionaryScreen = () => {
   const { userId } = useSelector((state: RootState) => state.authUser);
@@ -57,6 +58,7 @@ const DictionaryScreen = () => {
         </View>
       ) : (
         <ScrollView
+          className=""
           refreshControl={
             <RefreshControl
               refreshing={isLoadingProgress}
@@ -67,82 +69,95 @@ const DictionaryScreen = () => {
           }
           contentContainerStyle={{ paddingBottom: 30 }}
           showsVerticalScrollIndicator={false}>
-          {/* Kelime Listesi */}
           <View className=" ">
-            {GetAllWordUserProgressData?.map((item, index) => (
-              <View
-                key={index}
-                className="mx-4 mb-3 rounded-xl bg-white p-4"
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#00095720',
-                  shadowColor: '#000957',
-                  shadowOpacity: 0.05,
-                  shadowRadius: 8,
-                  elevation: 2,
-                }}>
-                <View className="flex-row items-center justify-between">
-                  <View className="flex-row items-center gap-2 space-x-3">
-                    {/* Dil Bayrağı Simülasyonu */}
-                    <TouchableOpacity className="h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                      <MaterialCommunityIcons name="bullhorn-outline" size={24} color="#000957" />
-                    </TouchableOpacity>
+            {Array.isArray(GetAllWordUserProgressData) &&
+              GetAllWordUserProgressData?.map((item, index) => (
+                <View
+                  key={index}
+                  className="mx-4 mb-3 rounded-xl bg-white p-4"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#00095720',
+                    shadowColor: '#000957',
+                    shadowOpacity: 0.05,
+                    shadowRadius: 8,
+                    elevation: 2,
+                  }}>
+                  <View className="flex-row justify-between">
+                    {/* Word Content Section */}
+                    <View className="mr-4 flex-1">
+                      <View className="mb-1 flex-row items-center">
+                        <Text style={{ fontSize: 18 }} className="font-bold text-primary">
+                          {item.wordMeaning.wordText}
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() => speak(item.wordMeaning.wordText)}
+                          className="ml-2 p-1">
+                          <MaterialCommunityIcons
+                            name="bullhorn-outline"
+                            size={20}
+                            color="#000957"
+                          />
+                        </TouchableOpacity>
+                      </View>
 
-                    <Text style={{ fontSize: 18 }} className="font-bold text-lg text-primary">
-                      {item.wordMeaning.wordText}
-                    </Text>
+                      {item.wordMeaning.meaning && (
+                        <View className="mt-1">
+                          <Text style={{ fontSize: 15 }} className="font-bold text-secondary">
+                            {item.wordMeaning.meaning}
+                          </Text>
+                        </View>
+                      )}
+
+                      {item.wordMeaning.meaningDesc && (
+                        <View className="mt-2 flex-row">
+                          <View
+                            style={{
+                              width: 4,
+                              backgroundColor: '#98D8EF',
+                              borderRadius: 2,
+                              marginRight: 8,
+                              height: '70%',
+                              marginTop: 4,
+                            }}
+                          />
+                          <Text
+                            className="italic text-gray-500"
+                            style={{
+                              lineHeight: 18,
+                              flexShrink: 1,
+                            }}>
+                            {item.wordMeaning.meaningDesc}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+ 
+                    <View className="flex-col justify-center gap-2">
+                      <TouchableOpacity
+                        className="items-center rounded-lg bg-green-400 px-3 py-2"
+                        onPress={() => { 
+                        }}>
+                        <Text className="font-medium text-sm text-white">Öğrendim</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        className="items-center rounded-lg bg-red-400 px-3 py-2"
+                        onPress={() => { 
+                        }}>
+                        <Text className="font-medium text-sm text-white">Sil</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  <TouchableOpacity>
-                    {' '}
-                    <Ionicons name="close-circle" size={24} color="#FF6B6B" />
-                  </TouchableOpacity>
                 </View>
-                {item.wordMeaning.meaning && (
-                  <View className=" mt-1">
-                    <Text
-                      style={{ marginLeft: 32, fontSize: 15 }}
-                      className="    font-bold text-secondary">
-                      {item.wordMeaning.meaning}
-                    </Text>
-                  </View>
-                )}
+              ))}
 
-                {item.wordMeaning.meaningDesc && (
-                  <View className="mt-2 flex-row">
-                    {/* Border Container */}
-                    <View
-                      style={{
-                        width: 4,
-                        backgroundColor: '#98D8EF',
-                        borderRadius: 2,
-                        marginRight: 8,
-
-                        height: '70%', // Metnin %70'i kadar yükseklik
-                        marginTop: 4, // Dikey hizalama için
-                      }}
-                    />
-
-                    {/* Text Container */}
-                    <Text
-                      className=" italic text-gray-500"
-                      style={{
-                        lineHeight: 18,
-                        flexShrink: 1,
-                      }}>
-                      {item.wordMeaning.meaningDesc}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            ))}
-
-            {/* Boş Liste Uyarısı */}
-            {!GetAllWordUserProgressData?.length && (
+            {Array.isArray(GetAllWordUserProgressData) && !GetAllWordUserProgressData?.length && (
               <View className="mt-20 items-center">
                 <Ionicons name="bookmarks" size={50} color="#98D8EF" />
                 <Text className="mt-4 text-lg text-primary">Kayıtlı kelimeniz bulunmamaktadır</Text>
                 <Text className="mt-2 text-gray-500">
-                  Okuduğunuz makalelerdeki kelimeler burada görünecek
+                  Okuduğunuz makalelerdeki bilmediğiniz kelimeler burada görünecek
                 </Text>
               </View>
             )}
