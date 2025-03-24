@@ -58,6 +58,7 @@ const AppContent = () => {
         animationStyle={'upInUpOut'}
       />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {/* <Stack.Screen name="Splash" component={SplashScreen} /> */}
         {(isAuthenticated || isGuest) && <Stack.Screen name="Splash" component={SplashScreen} />}
 
         {loading == false && (isAuthenticated || isGuest) ? (
