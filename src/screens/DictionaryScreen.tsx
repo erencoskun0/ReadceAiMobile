@@ -132,7 +132,7 @@ const DictionaryScreen = () => {
                         </View>
                       )}
                     </View>
- {/* selam */}
+ {/* selam sdfsdfsdf */}
                     <View className="flex-col justify-center gap-2">
                       <TouchableOpacity
                         className="items-center rounded-lg bg-green-400 px-3 py-2"
