@@ -1,0 +1,66 @@
+# Cursor Rules for ReadceAiMobile
+
+# Syntax
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Component Formatting
+max_line_length = 100
+quote_type = single
+jsx_quote_type = single
+trailing_comma = all
+arrow_parens = always
+bracket_spacing = true
+jsx_bracket_same_line = false
+print_width = 100
+
+# File Organization
+src_dir = src
+components_dir = src/components
+screens_dir = src/screens
+services_dir = src/services
+redux_dir = src/Redux
+navigation_dir = src/navigation
+types_dir = src/types
+utils_dir = src/utils
+assets_dir = assets
+
+# Naming Conventions
+component_naming = PascalCase
+screen_naming = PascalCase + Screen # e.g., HomeScreen
+service_naming = camelCase + api + EntityName # e.g., apiArticle
+hook_naming = use + PascalCase # e.g., useAuth
+context_naming = PascalCase + Context # e.g., AuthContext
+redux_slice_naming = camelCase + Slice # e.g., authSlice
+util_naming = camelCase # e.g., formatDate
+
+# Import Order
+import_order = [
+  "react",
+  "react-native",
+  "expo",
+  "@react-navigation",
+  "redux",
+  "external_libraries",
+  "services",
+  "redux",
+  "contexts",
+  "hooks",
+  "components",
+  "utils",
+  "types",
+  "assets",
+  "styles"
+]
+
+# Code Style
+prefer_const = true
+prefer_destructuring = true
+prefer_template_literals = true
+prefer_promise_async_await = true
+no_nested_ternary = true
+max_depth = 4 
