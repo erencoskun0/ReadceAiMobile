@@ -290,12 +290,12 @@ const DictionaryScreen = () => {
           </View>
 
           {/* Dikey seviye kartları */}
-          <View className="space-y-6">
+          <View className="flex gap-4  ">
             {languageLevels.map((level) => (
               <TouchableOpacity
                 key={level.id}
                 onPress={() => navigateToLevelWords(level.id, level.title)}
-                className="mb-4 rounded-xl border border-[#00095710] bg-white p-4"
+                className="  rounded-xl border border-[#00095710] bg-white p-4"
                 style={{
                   ...platformStyles.cardShadow,
                 }}>
@@ -342,7 +342,7 @@ const DictionaryScreen = () => {
           </View>
         </View>
 
-        {/* Kelime Filtreleme */}
+        {/* Kelime Filtreleme 
         <View className="mx-4 mb-4 flex-row gap-2">
           <TabButton
             title="Tümü"
@@ -369,7 +369,7 @@ const DictionaryScreen = () => {
           />
         </View>
 
-        {/* Kelime Listesi */}
+      
         <View className="mx-4">
           <Text className="text-md mb-3 font-semibold text-primary">
             {activeTab === 'all'
@@ -402,7 +402,7 @@ const DictionaryScreen = () => {
                       borderWidth: Platform.OS === 'ios' ? 1 : 0,
                       borderColor: Platform.OS === 'ios' ? '#00095710' : 'transparent',
                     }}>
-                    {/* Word Header with Level */}
+                    {/* Word Header with Level 
                     <LinearGradient
                       colors={['#000957', '#3B82F6']}
                       start={{ x: 0, y: 0 }}
@@ -445,7 +445,7 @@ const DictionaryScreen = () => {
                       </View>
                     </LinearGradient>
 
-                    {/* Word Content */}
+                    {/* Word Content * 
                     <View className="p-4">
                       {item.wordMeaning.meaning && (
                         <View className="mb-3 rounded-lg bg-blue-50 px-3 py-2">
@@ -461,7 +461,7 @@ const DictionaryScreen = () => {
                         </View>
                       )}
 
-                      {/* Action Buttons */}
+                      {/* Action Buttons * 
                       <View className="mt-4 flex-row justify-between">
                         <TouchableOpacity
                           className="mr-2 flex-1 flex-row items-center justify-center rounded-lg py-2.5"
@@ -509,7 +509,7 @@ const DictionaryScreen = () => {
               )}
             </View>
           )}
-        </View>
+        </View>*/}
       </ScrollView>
     </View>
   );

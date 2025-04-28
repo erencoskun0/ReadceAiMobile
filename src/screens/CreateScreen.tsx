@@ -24,6 +24,7 @@ import {
 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { globalStyles } from '../context/ThemeContext';
 
 // Metin konuları
 const topics = [
@@ -369,189 +370,197 @@ const CreateScreen = () => {
   );
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 bg-[#F8FAFF]">
-      <CustomHeader title="Metin Oluştur" pt={'pt-[0]'} titleSize={'text-2xl'} />
+    <View style={globalStyles.container}>
+      <CustomHeader title="İçerik Oluştur" pt={'pt-[0]'} titleSize={'text-2xl'} />
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-4">
-          {/* Başlık */}
-          <View className="mb-6">
-            <LinearGradient
-              colors={['#000957', '#3B82F6']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{ position: 'absolute', left: 0, height: '100%', width: 6, borderRadius: 100 }}
-            />
-            <View className="ml-4">
-              <Text className="mb-1 font-bold text-xl text-primary">
-                Yapay Zeka Metin Oluşturucu
-              </Text>
-              <Text className="text-base text-gray-600">
-                Yapay zeka ile dil seviyenize uygun özelleştirilmiş Metin içerikleri oluşturun
-              </Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}>
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+          <View className="px-4 py-4">
+            {/* Başlık */}
+            <View className="mb-6">
+              <LinearGradient
+                colors={['#000957', '#3B82F6']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  height: '100%',
+                  width: 6,
+                  borderRadius: 100,
+                }}
+              />
+              <View className="ml-4">
+                <Text className="mb-1 font-bold text-xl text-primary">
+                  Yapay Zeka Metin Oluşturucu
+                </Text>
+                <Text className="text-base text-gray-600">
+                  Yapay zeka ile dil seviyenize uygun özelleştirilmiş Metin içerikleri oluşturun
+                </Text>
+              </View>
             </View>
-          </View>
 
-          {/* Metin Türü */}
-          <View className="mb-8">
-            <Text className="mb-2 font-bold text-lg text-primary">Metin Türü</Text>
-            <Text className="mb-4 text-base text-gray-600">
-              Oluşturmak istediğiniz metnin türünü seçin. Bu, içeriğin formatını ve yapısını
-              belirleyecek.
-            </Text>
+            {/* Metin Türü */}
+            <View className="mb-8">
+              <Text className="mb-2 font-bold text-lg text-primary">Metin Türü</Text>
+              <Text className="mb-4 text-base text-gray-600">
+                Oluşturmak istediğiniz metnin türünü seçin. Bu, içeriğin formatını ve yapısını
+                belirleyecek.
+              </Text>
 
-            <View className="flex-row flex-wrap justify-between">
-              {textTypes.map((type) => (
-                <TextTypeItem key={type.id} item={type} />
-              ))}
+              <View className="flex-row flex-wrap justify-between">
+                {textTypes.map((type) => (
+                  <TextTypeItem key={type.id} item={type} />
+                ))}
+              </View>
             </View>
-          </View>
 
-          {/* Metin Konusu */}
-          <View className="mb-8">
-            <Text className="mb-2 font-bold text-lg text-primary">Metin Konusu</Text>
-            <Text className="mb-4 text-base text-gray-600">
-              Makaleniz için ilginizi çeken bir konu seçin. Seçtiğiniz konu, içeriğin odak noktasını
-              belirleyecek.
-            </Text>
+            {/* Metin Konusu */}
+            <View className="mb-8">
+              <Text className="mb-2 font-bold text-lg text-primary">Metin Konusu</Text>
+              <Text className="mb-4 text-base text-gray-600">
+                Makaleniz için ilginizi çeken bir konu seçin. Seçtiğiniz konu, içeriğin odak
+                noktasını belirleyecek.
+              </Text>
 
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-1">
-              {topics.map((topic) => (
-                <TopicItem key={topic.id} item={topic} />
-              ))}
-            </ScrollView>
-          </View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-1">
+                {topics.map((topic) => (
+                  <TopicItem key={topic.id} item={topic} />
+                ))}
+              </ScrollView>
+            </View>
 
-          {/* Dil Seviyesi */}
-          <View className="mb-8">
-            <Text className="mb-2 font-bold text-lg text-primary">Dil Seviyesi</Text>
-            <Text className="mb-4 text-base text-gray-600">
-              Metin hangi dil seviyesinde olmalı? Seviyenize uygun kelimeler ve gramer yapıları
-              kullanılacaktır.
-            </Text>
+            {/* Dil Seviyesi */}
+            <View className="mb-8">
+              <Text className="mb-2 font-bold text-lg text-primary">Dil Seviyesi</Text>
+              <Text className="mb-4 text-base text-gray-600">
+                Metin hangi dil seviyesinde olmalı? Seviyenize uygun kelimeler ve gramer yapıları
+                kullanılacaktır.
+              </Text>
 
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-1">
-              {languageLevels.map((level) => (
-                <LevelItem key={level.id} item={level} />
-              ))}
-            </ScrollView>
-          </View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-1">
+                {languageLevels.map((level) => (
+                  <LevelItem key={level.id} item={level} />
+                ))}
+              </ScrollView>
+            </View>
 
-          {/* Başlık Girişi */}
-          <View className="mb-8">
-            <Text className="mb-2 font-bold text-lg text-primary">Metin Başlığı</Text>
-            <Text className="mb-3 text-base text-gray-600">
-              Makaleniz için bir başlık girin veya yapay zekadan öneri almak için sağdaki simgeye
-              dokunun.
-            </Text>
-            <View className="relative">
+            {/* Başlık Girişi */}
+            <View className="mb-8">
+              <Text className="mb-2 font-bold text-lg text-primary">Metin Başlığı</Text>
+              <Text className="mb-3 text-base text-gray-600">
+                Makaleniz için bir başlık girin veya yapay zekadan öneri almak için sağdaki simgeye
+                dokunun.
+              </Text>
+              <View className="relative">
+                <TextInput
+                  className="rounded-xl border border-[#00095720] bg-white p-4 text-base"
+                  placeholder="Metin başlığını girin veya öneri alın"
+                  value={title}
+                  multiline
+                  numberOfLines={4}
+                  onChangeText={setTitle}
+                  textAlignVertical="top"
+                  style={{ height: 120 }}
+                />
+                {/*   <TouchableOpacity
+                  className="absolute right-4 top-4"
+                  style={Platform.OS === 'ios' ? { top: 15 } : {}}>
+                  <Ionicons name="sparkles-outline" size={24} color="#98D8EF" />
+                </TouchableOpacity> */}
+              </View>
+            </View>
+
+            {/* Anahtar Kelimeler */}
+            <View className="mb-8">
+              <Text className="mb-2 font-bold text-lg text-primary">Anahtar Kelimeler</Text>
+              <Text className="mb-3 text-base text-gray-600">
+                Makalede özellikle öğrenmek istediğiniz kelimeleri virgülle ayırarak ekleyin.
+                (İsteğe bağlı)
+              </Text>
               <TextInput
                 className="rounded-xl border border-[#00095720] bg-white p-4 text-base"
-                placeholder="Metin başlığını girin veya öneri alın"
-                value={title}
+                placeholder="Örn: sürdürülebilirlik, iklim değişikliği, yenilenebilir enerji"
+                value={keywords}
                 multiline
                 numberOfLines={4}
-                onChangeText={setTitle}
+                onChangeText={setKeywords}
                 textAlignVertical="top"
                 style={{ height: 120 }}
               />
-              {/*   <TouchableOpacity
-                className="absolute right-4 top-4"
-                style={Platform.OS === 'ios' ? { top: 15 } : {}}>
-                <Ionicons name="sparkles-outline" size={24} color="#98D8EF" />
-              </TouchableOpacity> */}
+            </View>
+
+            {/* Ek Bilgiler */}
+            <View className="mb-8">
+              <Text className="mb-2 font-bold text-lg text-primary">Ek İstekler</Text>
+              <Text className="mb-3 text-base text-gray-600">
+                Makalenizle ilgili özel talepleriniz veya içermesini istediğiniz konular varsa
+                belirtin. (İsteğe bağlı)
+              </Text>
+              <TextInput
+                className="rounded-xl border border-[#00095720] bg-white p-4 text-base"
+                placeholder="Örn: Günlük konuşma dilinde kullanılan ifadelere ağırlık verilsin."
+                value={additionalInfo}
+                onChangeText={setAdditionalInfo}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+                style={{ height: 120 }}
+              />
+            </View>
+
+            {/* Oluştur Butonu */}
+            <TouchableOpacity
+              onPress={generateArticle}
+              disabled={
+                !selectedTopic || !selectedLevel || !title || !selectedTextType || isGenerating
+              }
+              className={`mb-8 items-center rounded-xl py-4 ${
+                !selectedTopic || !selectedLevel || !title || !selectedTextType || isGenerating
+                  ? 'bg-gray-300'
+                  : 'bg-primary'
+              }`}>
+              {isGenerating ? (
+                <View className="flex-row items-center">
+                  <ActivityIndicator size="small" color="white" />
+                  <Text className="ml-2 font-bold text-lg text-white">Metin Oluşturuluyor...</Text>
+                </View>
+              ) : (
+                <View className="flex-row items-center">
+                  <MaterialCommunityIcons name="fountain-pen-tip" size={22} color="white" />
+                  <Text className="ml-2 font-bold text-lg text-white">Metin Oluştur</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            {/* İpuçları */}
+            <View className="mb-6 rounded-xl bg-blue-50 p-5">
+              <View className="mb-3 flex-row items-center">
+                <Ionicons name="bulb-outline" size={24} color="#3B82F6" />
+                <Text className="ml-2 font-bold text-lg text-primary">İpuçları</Text>
+              </View>
+              <Text className="mb-2 text-base leading-5 text-gray-700">
+                • Seçtiğiniz metin türü ve dil seviyesine uygun içerik oluşturulur.
+              </Text>
+              <Text className="mb-2 text-base leading-5 text-gray-700">
+                • Detaylı ve açıklayıcı bir başlık, daha iyi içerik üretilmesini sağlar.
+              </Text>
+              <Text className="mb-2 text-base leading-5 text-gray-700">
+                • Belirli kelimeleri öğrenmek istiyorsanız anahtar kelimeler bölümüne ekleyin.
+              </Text>
+              <Text className="text-base leading-5 text-gray-700">
+                • Ek istekler bölümünde makalenin tarzı ve içeriği hakkında detay verebilirsiniz.
+              </Text>
             </View>
           </View>
-
-          {/* Anahtar Kelimeler */}
-          <View className="mb-8">
-            <Text className="mb-2 font-bold text-lg text-primary">Anahtar Kelimeler</Text>
-            <Text className="mb-3 text-base text-gray-600">
-              Makalede özellikle öğrenmek istediğiniz kelimeleri virgülle ayırarak ekleyin. (İsteğe
-              bağlı)
-            </Text>
-            <TextInput
-              className="rounded-xl border border-[#00095720] bg-white p-4 text-base"
-              placeholder="Örn: sürdürülebilirlik, iklim değişikliği, yenilenebilir enerji"
-              value={keywords}
-              multiline
-              numberOfLines={4}
-              onChangeText={setKeywords}
-              textAlignVertical="top"
-              style={{ height: 120 }}
-            />
-          </View>
-
-          {/* Ek Bilgiler */}
-          <View className="mb-8">
-            <Text className="mb-2 font-bold text-lg text-primary">Ek İstekler</Text>
-            <Text className="mb-3 text-base text-gray-600">
-              Makalenizle ilgili özel talepleriniz veya içermesini istediğiniz konular varsa
-              belirtin. (İsteğe bağlı)
-            </Text>
-            <TextInput
-              className="rounded-xl border border-[#00095720] bg-white p-4 text-base"
-              placeholder="Örn: Günlük konuşma dilinde kullanılan ifadelere ağırlık verilsin."
-              value={additionalInfo}
-              onChangeText={setAdditionalInfo}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-              style={{ height: 120 }}
-            />
-          </View>
-
-          {/* Oluştur Butonu */}
-          <TouchableOpacity
-            onPress={generateArticle}
-            disabled={
-              !selectedTopic || !selectedLevel || !title || !selectedTextType || isGenerating
-            }
-            className={`mb-8 items-center rounded-xl py-4 ${
-              !selectedTopic || !selectedLevel || !title || !selectedTextType || isGenerating
-                ? 'bg-gray-300'
-                : 'bg-primary'
-            }`}>
-            {isGenerating ? (
-              <View className="flex-row items-center">
-                <ActivityIndicator size="small" color="white" />
-                <Text className="ml-2 font-bold text-lg text-white">Metin Oluşturuluyor...</Text>
-              </View>
-            ) : (
-              <View className="flex-row items-center">
-                <MaterialCommunityIcons name="fountain-pen-tip" size={22} color="white" />
-                <Text className="ml-2 font-bold text-lg text-white">Metin Oluştur</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-
-          {/* İpuçları */}
-          <View className="mb-6 rounded-xl bg-blue-50 p-5">
-            <View className="mb-3 flex-row items-center">
-              <Ionicons name="bulb-outline" size={24} color="#3B82F6" />
-              <Text className="ml-2 font-bold text-lg text-primary">İpuçları</Text>
-            </View>
-            <Text className="mb-2 text-base leading-5 text-gray-700">
-              • Seçtiğiniz metin türü ve dil seviyesine uygun içerik oluşturulur.
-            </Text>
-            <Text className="mb-2 text-base leading-5 text-gray-700">
-              • Detaylı ve açıklayıcı bir başlık, daha iyi içerik üretilmesini sağlar.
-            </Text>
-            <Text className="mb-2 text-base leading-5 text-gray-700">
-              • Belirli kelimeleri öğrenmek istiyorsanız anahtar kelimeler bölümüne ekleyin.
-            </Text>
-            <Text className="text-base leading-5 text-gray-700">
-              • Ek istekler bölümünde makalenin tarzı ve içeriği hakkında detay verebilirsiniz.
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* Metin Oluşturuldu Modalı */}
       <ArticleCreatedModal />
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

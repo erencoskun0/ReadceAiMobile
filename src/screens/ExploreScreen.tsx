@@ -6,11 +6,13 @@ import ExploreForYou from '../components/ExploreForYou';
 import { getGreeting } from '../utils/getGreeting';
 import ExploreTypeSomeArticles from '../components/ExploreTypeSomeArticles';
 import ExploreCategorySomeArticles from '../components/ExploreCategorySomeArticles';
+import { globalStyles } from '../context/ThemeContext';
+
 const ExploreScreen = () => {
   return (
-    <View className='flex-1'>
+    <View style={globalStyles.container}>
       <CustomHeader title={getGreeting()} pt={'pt-[25]'} titleSize={'text-3xl'} />
-      <ScrollView className="   ">
+      <ScrollView className="  ">
         <ExploreForYou />
         <ExploreCategorySomeArticles />
         <ExploreTypeSomeArticles />
