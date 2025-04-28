@@ -28,7 +28,7 @@ const ExploreForYou = () => {
   return (
     <>
       {isLoading && <CustomLoaderWord />}
-      <View className="mb-2">
+      <View className="mb-2 ">
         {/* Başlık ve Tümünü Göster */}
         <View className="mb-4 mt-6 flex flex-row  items-end justify-between px-4">
           <Text className="text-lg text-primary" style={{ fontFamily: 'Poppins-SemiBold' }}>

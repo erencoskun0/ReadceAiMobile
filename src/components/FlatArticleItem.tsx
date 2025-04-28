@@ -1,10 +1,11 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Platform } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import CustomLoaderWord from './CustomLoaderWord';
 import { useNavigation } from '@react-navigation/native';
 const FlatArticleItem = ({ item }: any) => {
   const navigation = useNavigation<any>();
+
   return (
     <TouchableOpacity
       onPress={() => {

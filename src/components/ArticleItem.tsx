@@ -1,11 +1,26 @@
-import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList, Platform } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 const ArticleItem = ({ item }: any) => {
+  const platformStyles = {
+    shadow: Platform.select({
+      ios: {
+        shadowColor: '#000957',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  };
+
   const navigation = useNavigation<any>();
   return (
     <TouchableOpacity
+      style={platformStyles.shadow}
       onPress={() => {
         navigation.navigate('ArticleDetailScreen', { item });
       }}
