@@ -54,6 +54,7 @@ const TabButton = ({ title, value, icon, activeTab, setActiveTab }: any) => (
       {icon}
       <Text className={`ml-1 font-semibold ${activeTab === value ? 'text-white' : 'text-primary'}`}>
         {title}
+        {/* deneme */}
       </Text>
     </View>
   </TouchableOpacity>
