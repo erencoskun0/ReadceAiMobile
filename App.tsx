@@ -34,6 +34,7 @@ export default function App() {
   return (
     <QueryClientProvider client={client}>
       <Provider store={store}>
+        <StatusBar style="dark" translucent />
         <AppContent />
       </Provider>
     </QueryClientProvider>

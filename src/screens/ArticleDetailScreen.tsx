@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import { GetAllArticlesIsPublicType } from '../types/apiExploreType';
-import { useRoute } from '@react-navigation/native';
+import { CommonActions, useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CustomHeader from '../components/CustomHeader';
@@ -103,7 +103,7 @@ const ArticleDetailScreen = () => {
     <View>
       <CustomHeader
         onBackPress={() => {
-          navigation.goBack();
+          navigation.navigate('KeşfetMain');
         }}
         pt={'pt-[0]'}
         titleSize={'text-2xl'}
