@@ -186,7 +186,7 @@ const DictionaryScreen = () => {
         {icon}
         <Text
           className={`ml-1 font-semibold ${activeTab === value ? 'text-white' : 'text-primary'}`}>
-          {title}
+
         </Text>
       </View>
     </TouchableOpacity>
