@@ -371,7 +371,7 @@ const CreateScreen = () => {
 
   return (
     <View style={globalStyles.container}>
-      <CustomHeader title="İçerik Oluştur" pt={'pt-[0]'} titleSize={'text-2xl'} />
+      <CustomHeader title="İçerik Oluştur" pt={'py-[12] pl-4'} titleSize={'text-2xl'} />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

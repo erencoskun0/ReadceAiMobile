@@ -194,7 +194,7 @@ const DictionaryScreen = () => {
 
   return (
     <View className="flex-1 bg-[#F8FAFF]">
-      <CustomHeader title="Sözlüğüm" pt={'pt-[0]'} titleSize={'text-2xl'} />
+      <CustomHeader title="Sözlüğüm" pt={'py-[12] pl-4'} titleSize={'text-2xl'} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}

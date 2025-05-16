@@ -105,7 +105,6 @@ const ArticleDetailScreen = () => {
         onBackPress={() => {
           navigation.navigate('KeşfetMain');
         }}
-        pt={'pt-[0]'}
         titleSize={'text-2xl'}
       />
 

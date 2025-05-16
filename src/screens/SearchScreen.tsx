@@ -389,7 +389,7 @@ const SearchScreen = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       className="flex-1 bg-[#F8FAFF]">
-      <CustomHeader title="Ara" pt={'pt-[0]'} titleSize={'text-2xl'} />
+      <CustomHeader title="Ara" pt={'py-[12] pl-4'} titleSize={'text-2xl'} />
 
       <View className="flex-1 px-4">
         {/* Arama Kutusu */}

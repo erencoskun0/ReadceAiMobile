@@ -122,7 +122,7 @@ const ProfileScreen = () => {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <CustomHeader title="Profilim" pt={'pt-[0]'} titleSize={'text-2xl'} />
+      <CustomHeader title="Profilim" pt={'py-[12] pl-4'} titleSize={'text-2xl'} />
 
       <ScrollView className="flex-1 px-4 pt-4">
         <ProfileCard />

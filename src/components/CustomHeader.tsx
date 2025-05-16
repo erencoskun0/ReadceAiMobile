@@ -22,9 +22,10 @@ const CustomHeader = ({
   titleSize,
 }: CustomHeaderProp) => {
   return (
-    <SafeAreaView className={`  ${pt}  `} edges={['top']}>
+  
       <View
-        className={`relative flex flex-row items-center justify-between ${onBackPress ? 'px-2' : 'px-4'}  py-2`}>
+        className={`relative flex flex-row items-center justify-between ${onBackPress ? 'px-2' : 'px-4'}   pl-4 ,
+        py-[12]  ${pt}`}>
         <View className="flex flex-row  items-center gap-3">
           {onBackPress && (
             <TouchableOpacity onPress={onBackPress}>
@@ -44,7 +45,7 @@ const CustomHeader = ({
           </TouchableOpacity>
         )}
       </View>
-    </SafeAreaView>
+ 
   );
 };
 
